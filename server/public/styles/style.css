@@ -1,0 +1,37 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: 0;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(
+    to bottom,
+    rgb(218, 134, 134),
+    rgb(165, 144, 144)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section {
+  width: 50%;
+  display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#input-container,
+.task-placeholder {
+  border: 2px solid black;
+  height: 200px;
+  width: 200px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
