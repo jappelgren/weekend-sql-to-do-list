@@ -1,21 +1,21 @@
 $('document').ready(handleReady);
 
 function handleReady() {
-    getCategories();
+    getCategories('category-select');
     getTasks();
     $(document).on('click', '#submit-btn', submitForm);
     $(document).on('click', '.delete-btn', deleteTask);
     $(document).on('click', '.edit-btn', editTask);
 }//end handleReady
 
-function getCategories() {
+function getCategories(selectId) {
     $.ajax({
         url: '/categories',
         type: 'GET'
     }).then(function (response) {
-        $('#category-select').empty()
+        $(`#${selectId}`).empty()
         for (cat of response) {
-            $('#category-select').append(`<option value="${cat.category}">${cat.category}</option>`)
+            $(`#${selectId}`).append(`<option data-index="${cat.id}" value="${cat.category}">${cat.category}</option>`)
         }
 
     }).catch(function (err) {
@@ -58,6 +58,16 @@ function submitForm() {
 }//end submitForm
 
 function editTask() {
+
+    let id = $(this).closest('.task').data('id');
+
+    let dataObj = {
+        category: $(`#task-info${id} > .cat-icon`).data('category'),
+        task: $(`#task-info${id}`).data('task'),
+        completeBy: new Date($(`#task-info${id}`).data('complete-by')).toLocaleDateString()
+    }
+    console.log(dataObj)
+
     $(this).text('Submit Changes').attr('class', 'changes-btn');
     $(this).next('button').attr('class', 'cancel-btn').text('Cancel Changes')
     $(document).on('click', '.cancel-btn', function () {
@@ -65,6 +75,17 @@ function editTask() {
         getTasks();
     })
 
+    $(`#task-info${id}`).empty()
+    $(`#task-info${id}`).append(`
+        <select name="category" id="category-select-edit">
+            <option value="${dataObj.category}">Loading...</option>
+        </select>
+        <input name="task" type="text" id="task-edit" value="${dataObj.task}"/>
+        <input type="date" name="date" id="complete-by-edit" value="${dataObj.completeBy}" />
+    `)
+    getCategories('category-select-edit');
+
+    $('#category-select-edit').prop('selectedIndex', 2)
 
 
 }
@@ -83,16 +104,33 @@ function deleteTask() {
 
 function renderTasks(data) {
     $('#tasks-display').empty();
-    for (task of data) {
-        let dateAdded = new Date(task.date_added).toDateString();
-        let completeBy = new Date(task.complete_by).toDateString();
-        console.log(task.task, task.category, task.completed)
+    for (item of data) {
+        let dateAdded = new Date(item.date_added).toDateString();
+        let completeBy = new Date(item.complete_by).toDateString();
+        console.log(item)
+        console.log(item.task, item.category, item.completed)
         $('#tasks-display').append(`
-            <div class="task" data-id="${task.id}">
-                <h1>${task.category}</h1>
-                <p> * ${task.task} Added on: ${dateAdded} Complete by: ${completeBy}</p>
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
+            <div class="task" data-id="${item.id}">
+                <div class="task-info" id="task-info${item.id}" data-task="${item.task}" data-complete-by="${item.complete_by}">
+                    <h1 class="cat-icon" data-category="${item.category}">${item.category}</h1>
+                    <table>
+                        <tr>
+                            <td class="task-description">${item.task}</td> 
+                        </tr>
+                        <tr>
+                            <td>Added on:</td>
+                            <td>Complete by:</td>
+                        </tr>
+                        <tr>
+                            <td class="date-added">${dateAdded}</td> 
+                            <td class="complete-by">${completeBy}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="task-btns">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
             </div>
         `)
     }
