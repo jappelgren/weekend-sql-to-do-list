@@ -3,8 +3,10 @@ $('document').ready(handleReady);
 function handleReady() {
     getCategories();
     getTasks();
-    $(document).on('click', 'button', submitForm);
-}
+    $(document).on('click', '#submit-btn', submitForm);
+    $(document).on('click', '.delete-btn', deleteTask);
+    $(document).on('click', '.edit-btn', editTask);
+}//end handleReady
 
 function getCategories() {
     $.ajax({
@@ -20,7 +22,7 @@ function getCategories() {
         console.log(err)
         alert('Error getting data.')
     })
-}
+}//end getCategories
 
 function getTasks() {
     $.ajax({
@@ -33,7 +35,7 @@ function getTasks() {
         console.log(err)
         alert('Error getting data.')
     })
-}
+}//end gwtTasks
 
 function submitForm() {
     let taskObj = {
@@ -53,19 +55,37 @@ function submitForm() {
     }).catch(function (err) {
         console.log(err)
     })
+}//end submitForm
+
+function editTask() {
+    console.log('edit')
 }
+
+function deleteTask() {
+    $.ajax({
+        url: `/tasks/${$(this).closest('div').data('id')}`,
+        type: 'DELETE'
+    }).then(function (response) {
+        getTasks();
+    }).catch(function (err) {
+        console.log(err)
+    })
+}
+
+
 function renderTasks(data) {
-
-
-    console.log(data)
+    $('#tasks-display').empty();
     for (task of data) {
         let dateAdded = new Date(task.date_added).toDateString();
         let completeBy = new Date(task.complete_by).toDateString();
         console.log(task.task, task.category, task.completed)
         $('#tasks-display').append(`
             <div class="task" data-id="${task.id}">
-                <p>${task.category} * ${task.task} Added on: ${dateAdded} Complete by: ${completeBy}</p>
+                <h1>${task.category}</h1>
+                <p> * ${task.task} Added on: ${dateAdded} Complete by: ${completeBy}</p>
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
             </div>
         `)
     }
-}
+}//end renderTasks
