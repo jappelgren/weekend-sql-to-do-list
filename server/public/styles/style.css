@@ -45,8 +45,8 @@ section {
 
 #input-container {
   border: 2px solid black;
-  height: 200px;
-  width: 100%;
+  height: 300px;
+  width: 50%;
   border-radius: 30px;
   display: flex;
   flex-direction: column;
@@ -82,4 +82,10 @@ section {
 
 .status-complete:before {
   content: 'COMPLETED';
+  font-size: small;
+}
+
+button {
+  background-color: transparent;
+  border: none;
 }

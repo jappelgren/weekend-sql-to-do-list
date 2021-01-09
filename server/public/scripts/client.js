@@ -80,7 +80,12 @@ function editTask() {
     $(this).text('Submit Changes').attr('class', 'changes-btn');
     $(this).next('button').attr('class', 'cancel-btn').text('Cancel Changes')
 
-    $(this).prev().remove();
+    $(`#task-info${id}`).next().empty().append(` 
+        <button><img class="changes-btn" src="./images/iconmonstr-check-mark-4.svg" alt="black Checkmark" /></button>
+        <button><img class="cancel-btn" src="./images/iconmonstr-x-mark-4.svg" alt="black Checkmark" /></button>
+    `)
+
+
     $(`#task-info${id}`).empty();
     $(`#task-info${id}`).append(`
         <select name="category" id="category-select-edit">
@@ -186,7 +191,7 @@ function renderTasks(data) {
         $('#tasks-display').append(`
             <div class="task ${completeDivClass}" data-id="${item.id}" data-completed="${item.completed}">
                 <div class="task-info" id="task-info${item.id}" data-task="${item.task}" data-complete-by="${item.complete_by}">
-                    <h1 class="cat-icon ${item.category}" data-category="${item.category}">${item.category}</h1>
+                    <img class="cat-icon ${item.category}" data-category="${item.category}">${item.category}</h1>
                     <table>
                         <tr>
                             <td class="task-description">${item.task}</td> 
@@ -202,9 +207,9 @@ function renderTasks(data) {
                     </table>
                 </div>
                 <div class="task-btns">
-                    <button class="${completeBtnClass}">${completeBtnTxt}</button>
-                    <button class="edit-btn">Edit</button>
-                    <button class="delete-btn">Delete</button>
+                    <button class="${completeBtnClass}"><img src="./images/iconmonstr-check-mark-4.svg" alt="black Checkmark" /></button>
+                    <button class="edit-btn"><img src="./images/iconmonstr-pencil-8.svg" alt="black Checkmark" /></button>
+                    <button class="delete-btn"><img src="./images/iconmonstr-trash-can-9.svg" alt="black Checkmark" /></button>
                 </div>
             </div>
         `)
