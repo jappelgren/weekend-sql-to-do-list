@@ -12,16 +12,18 @@
     <main>
       <section id="input">
         <div id="input-container">
+          <label for="task">Task</label>
           <input name="task" type="text" id="task" />
+          <label for="category">Category</label>
           <select name="category" id="category-select">
             <option value="">Loading...</option>
           </select>
+          <label for="complete-by">Complete by:</label>
+          <input type="date" name="date" id="complete-by" />
           <button type="submit">Submit</button>
         </div>
       </section>
-      <section id="tasks-display">
-        <div class="task-placeholder">hi</div>
-      </section>
+      <section id="tasks-display"></section>
     </main>
   </body>
 </html>

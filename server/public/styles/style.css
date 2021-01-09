@@ -36,10 +36,12 @@ section {
 }
 
 #tasks-display {
+  display: flex;
+  flex-direction: column;
 }
 
-#input {
-}
+/* #input {
+} */
 
 #input-container,
 .task-placeholder {
