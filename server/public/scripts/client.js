@@ -1,7 +1,24 @@
 $('document').ready(handleReady);
 
 function handleReady() {
-    $(document).on('click', 'button', submitForm)
+    getCategories();
+    $(document).on('click', 'button', submitForm);
+}
+
+function getCategories() {
+    $.ajax({
+        url: '/categories',
+        type: 'GET'
+    }).then(function (response) {
+        $('#category-select').empty()
+        for (cat of response) {
+            $('#category-select').append(`<option value="${cat.category}">${cat.category}</option>`)
+        }
+
+    }).catch(function (err) {
+        console.log(err)
+        alert('Error getting data.')
+    })
 }
 
 function submitForm() {
