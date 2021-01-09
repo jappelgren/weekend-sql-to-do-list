@@ -48,16 +48,24 @@ router.delete('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
     let queryArr = [req.body.task, req.body.category, req.body.completeBy, req.params.id]
-    let queryTextEdit = `
+    let queryText = `
     UPDATE "todo"
     SET "task" = $1,
         "category" = $2,
         "complete_by" = $3
-    WHERE "id" = $4
+    WHERE "id" = $4;
     `
-    let queryTextCompleted = ``
+    console.log(req.body)
+    if (req.body.completed) {
+        queryText = `
+        UPDATE "todo"
+        SET "completed" = $1
+        WHERE "id" = $2;
+        `
+        queryArr = [req.body.completed, req.params.id]
+    }
 
-    pool.query(queryTextEdit, queryArr)
+    pool.query(queryText, queryArr)
         .then((result) => {
             console.log(result)
             res.sendStatus(200)

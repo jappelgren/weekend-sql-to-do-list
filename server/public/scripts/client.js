@@ -6,6 +6,7 @@ function handleReady() {
     $(document).on('click', '#submit-btn', submitForm);
     $(document).on('click', '.delete-btn', deleteTask);
     $(document).on('click', '.edit-btn', editTask);
+    $(document).on('click', '.complete-btn', completeTask);
 }//end handleReady
 
 function getCategories(selectId, editCat = null) {
@@ -20,7 +21,6 @@ function getCategories(selectId, editCat = null) {
             } else {
                 $(`#${selectId}`).append(`<option value="${cat.category}">${cat.category}</option>`)
             }
-
         }
 
     }).catch(function (err) {
@@ -117,6 +117,28 @@ function submitEdit() {
     })
 }
 
+function completeTask() {
+    let id = $(this).closest('.task').data('id');
+    let completed = !$(this).closest('.task').data('completed')
+
+    let dataObj = {
+        completed: `${completed}`
+
+    }
+
+
+    $.ajax({
+        url: `/tasks/${id}`,
+        type: 'PUT',
+        data: dataObj
+    }).then(function (response) {
+        getTasks();
+        console.log(response)
+    }).catch(function (err) {
+        console.log(err)
+    })
+}
+
 function deleteTask() {
     $.ajax({
         url: `/tasks/${$(this).closest('.task').data('id')}`,
@@ -132,12 +154,11 @@ function deleteTask() {
 function renderTasks(data) {
     $('#tasks-display').empty();
     for (item of data) {
+        console.log(item.completed)
         let dateAdded = new Date(item.date_added).toDateString();
         let completeBy = new Date(item.complete_by).toDateString();
-        console.log(item)
-        console.log(item.task, item.category, item.completed)
         $('#tasks-display').append(`
-            <div class="task" data-id="${item.id}">
+            <div class="task" data-id="${item.id}" data-completed="${item.completed}">
                 <div class="task-info" id="task-info${item.id}" data-task="${item.task}" data-complete-by="${item.complete_by}">
                     <h1 class="cat-icon" data-category="${item.category}">${item.category}</h1>
                     <table>
@@ -155,6 +176,7 @@ function renderTasks(data) {
                     </table>
                 </div>
                 <div class="task-btns">
+                    <button class="complete-btn">Completed</button>
                     <button class="edit-btn">Edit</button>
                     <button class="delete-btn">Delete</button>
                 </div>
