@@ -135,9 +135,10 @@ function completeTask() {
     let completed = !$(this).closest('.task').data('completed')
 
     if ($(this).hasClass('complete-btn') === true) {
-        $(this).removeClass().addClass('retry-btn').text('Make Active');
+        $(this).removeClass().addClass('retry-btn');
+        $(this).empty()
     } else if ($(this).hasClass('retry-btn') === true) {
-        $(this).removeClass().addClass('complete-btn').text('Completed');
+        $(this).removeClass().addClass('complete-btn');
     }
 
     let dataObj = {
@@ -175,15 +176,25 @@ function renderTasks(data) {
         let dateAdded = new Date(item.date_added).toDateString();
         let completeBy = new Date(item.complete_by).toDateString();
         let completeBtnClass;
-        let completeBtnTxt;
         let completeDivClass;
+        let iconFile;
 
-        if (item.completed) {
-            completeBtnTxt = 'Complete Task'
+        if (item.category === 'Home') {
+            iconFile = 'iconmonstr-building-7.svg'
+        } else if (item.category === 'Work') {
+            iconFile = 'iconmonstr-building-15.svg'
+        } else if (item.category === 'School') {
+            iconFile = 'iconmonstr-book-3.svg'
+        } else if (item.category === 'Urgent') {
+            iconFile = 'iconmonstr-warning-1.svg'
+        } else {
+            iconFile = 'iconmonstr-clipboard-9.svg'
+        }
+
+        if (!item.completed) {
             completeBtnClass = 'complete-btn'
             completeDivClass = 'status-active'
-        } else if (!item.completed) {
-            completeBtnTxt = 'Make Active'
+        } else if (item.completed) {
             completeBtnClass = 'retry-btn'
             completeDivClass = 'status-complete'
         }
@@ -191,12 +202,12 @@ function renderTasks(data) {
         $('#tasks-display').append(`
             <div class="task ${completeDivClass}" data-id="${item.id}" data-completed="${item.completed}">
                 <div class="task-info" id="task-info${item.id}" data-task="${item.task}" data-complete-by="${item.complete_by}">
-                    <img class="cat-icon ${item.category}" data-category="${item.category}">${item.category}</h1>
+                    <img src="./images/${iconFile}" class="cat-icon ${item.category}" data-category="${item.category}"/>
                     <table>
-                        <tr>
+                        <tr class="task-row">
                             <td class="task-description">${item.task}</td> 
                         </tr>
-                        <tr>
+                        <tr class="added-completed-row-row">
                             <td>Added on:</td>
                             <td>Complete by:</td>
                         </tr>

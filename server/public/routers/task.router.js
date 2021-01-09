@@ -37,7 +37,6 @@ router.delete('/:id', (req, res) => {
         `
     pool.query(queryText, [req.params.id])
         .then((result) => {
-            console.log(result)
             res.sendStatus(200)
         }).catch((err) => {
             console.log(err)
@@ -67,7 +66,6 @@ router.put('/:id', (req, res) => {
 
     pool.query(queryText, queryArr)
         .then((result) => {
-            console.log(result)
             res.sendStatus(200)
         }).catch((err) => {
             console.log(err)
