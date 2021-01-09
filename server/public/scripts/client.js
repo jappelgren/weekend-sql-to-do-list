@@ -205,7 +205,7 @@ function renderTasks(data) {
                     <img src="./images/${iconFile}" class="cat-icon ${item.category}" data-category="${item.category}"/>
                     <table>
                         <tr class="task-row">
-                            <td class="task-description">${item.task}</td> 
+                            <td colspan="2" class="task-description">${item.task}</td> 
                         </tr>
                         <tr class="added-completed-row-row">
                             <td>Added on:</td>
