@@ -8,14 +8,19 @@ function handleReady() {
     $(document).on('click', '.edit-btn', editTask);
 }//end handleReady
 
-function getCategories(selectId) {
+function getCategories(selectId, editCat = null) {
     $.ajax({
         url: '/categories',
         type: 'GET'
     }).then(function (response) {
         $(`#${selectId}`).empty()
         for (cat of response) {
-            $(`#${selectId}`).append(`<option data-index="${cat.id}" value="${cat.category}">${cat.category}</option>`)
+            if (editCat === cat.category) {
+                $(`#${selectId}`).append(`<option selected="selected" value="${cat.category}">${cat.category}</option>`)
+            } else {
+                $(`#${selectId}`).append(`<option value="${cat.category}">${cat.category}</option>`)
+            }
+
         }
 
     }).catch(function (err) {
@@ -64,35 +69,57 @@ function editTask() {
     let dataObj = {
         category: $(`#task-info${id} > .cat-icon`).data('category'),
         task: $(`#task-info${id}`).data('task'),
-        completeBy: new Date($(`#task-info${id}`).data('complete-by')).toLocaleDateString()
+        completeBy: dateFormatter($(`#task-info${id}`).data('complete-by'))
     }
-    console.log(dataObj)
 
     $(this).text('Submit Changes').attr('class', 'changes-btn');
     $(this).next('button').attr('class', 'cancel-btn').text('Cancel Changes')
-    $(document).on('click', '.cancel-btn', function () {
-        $(this).text('Edit').attr('class', 'edit-btn')
-        getTasks();
-    })
 
     $(`#task-info${id}`).empty()
     $(`#task-info${id}`).append(`
         <select name="category" id="category-select-edit">
-            <option value="${dataObj.category}">Loading...</option>
+            <option>Loading...</option>
         </select>
         <input name="task" type="text" id="task-edit" value="${dataObj.task}"/>
         <input type="date" name="date" id="complete-by-edit" value="${dataObj.completeBy}" />
     `)
-    getCategories('category-select-edit');
+    getCategories('category-select-edit', `${dataObj.category}`);
 
-    $('#category-select-edit').prop('selectedIndex', 2)
+    $(document).on('click', '.cancel-btn', function () {
+        $(this).text('Edit').attr('class', 'edit-btn')
+        $(`[value|=${dataObj.category}]`).removeAttr('selected')
+        getTasks();
+    })
+    $(document).on('click', '.changes-btn', submitEdit)
 
+}
 
+function submitEdit() {
+    let id = $(this).closest('.task').data('id');
+
+    let dataObj = {
+        task: $('#task-edit').val(),
+        category: $('#category-select-edit').val(),
+        completeBy: $('#complete-by-edit').val()
+
+    }
+    console.log(dataObj)
+
+    $.ajax({
+        url: `/tasks/${id}`,
+        type: 'PUT',
+        data: dataObj
+    }).then(function (response) {
+        getTasks();
+        console.log(response)
+    }).catch(function (err) {
+        console.log(err)
+    })
 }
 
 function deleteTask() {
     $.ajax({
-        url: `/tasks/${$(this).closest('div').data('id')}`,
+        url: `/tasks/${$(this).closest('.task').data('id')}`,
         type: 'DELETE'
     }).then(function (response) {
         getTasks();
@@ -135,3 +162,21 @@ function renderTasks(data) {
         `)
     }
 }//end renderTasks
+
+//The following little chunk of code was found here https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+// It formats the date in a way that can be stored as a value in a <input> with a type of date.
+//The function uses the Date constructor to build a date and then checks to see if the day and month have two digits
+//if the date is a single digit it concats a 0 in front to make it conform to the yyyy-mm-dd format.
+function dateFormatter(date) {
+    let newDate = new Date(date),
+        month = '' + (newDate.getMonth() + 1),
+        day = '' + newDate.getDate(),
+        year = newDate.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}//end dateFormatter

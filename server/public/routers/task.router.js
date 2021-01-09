@@ -45,4 +45,25 @@ router.delete('/:id', (req, res) => {
         })
 })
 
+
+router.put('/:id', (req, res) => {
+    let queryArr = [req.body.task, req.body.category, req.body.completeBy, req.params.id]
+    let queryTextEdit = `
+    UPDATE "todo"
+    SET "task" = $1,
+        "category" = $2,
+        "complete_by" = $3
+    WHERE "id" = $4
+    `
+    let queryTextCompleted = ``
+
+    pool.query(queryTextEdit, queryArr)
+        .then((result) => {
+            console.log(result)
+            res.sendStatus(200)
+        }).catch((err) => {
+            console.log(err)
+            res.sendStatus(500)
+        })
+})
 module.exports = router;
