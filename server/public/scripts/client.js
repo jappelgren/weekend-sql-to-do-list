@@ -58,7 +58,15 @@ function submitForm() {
 }//end submitForm
 
 function editTask() {
-    console.log('edit')
+    $(this).text('Submit Changes').attr('class', 'changes-btn');
+    $(this).next('button').attr('class', 'cancel-btn').text('Cancel Changes')
+    $(document).on('click', '.cancel-btn', function () {
+        $(this).text('Edit').attr('class', 'edit-btn')
+        getTasks();
+    })
+
+
+
 }
 
 function deleteTask() {
@@ -70,7 +78,7 @@ function deleteTask() {
     }).catch(function (err) {
         console.log(err)
     })
-}
+}//end deleteTask
 
 
 function renderTasks(data) {
