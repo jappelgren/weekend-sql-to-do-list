@@ -71,3 +71,15 @@ section {
   display: flex;
   flex-direction: row;
 }
+
+.status-active {
+  background-color: green;
+}
+
+.status-complete {
+  background-color: blue;
+}
+
+.status-complete:before {
+  content: 'COMPLETED';
+}

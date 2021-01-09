@@ -1,12 +1,17 @@
 $('document').ready(handleReady);
 
+function oneEditAtATime() {
+    $(document).one('click', '.edit-btn', editTask);
+}
+
 function handleReady() {
     getCategories('category-select');
     getTasks();
+    oneEditAtATime();
     $(document).on('click', '#submit-btn', submitForm);
     $(document).on('click', '.delete-btn', deleteTask);
-    $(document).on('click', '.edit-btn', editTask);
     $(document).on('click', '.complete-btn', completeTask);
+    $(document).on('click', '.retry-btn', completeTask);
 }//end handleReady
 
 function getCategories(selectId, editCat = null) {
@@ -75,7 +80,8 @@ function editTask() {
     $(this).text('Submit Changes').attr('class', 'changes-btn');
     $(this).next('button').attr('class', 'cancel-btn').text('Cancel Changes')
 
-    $(`#task-info${id}`).empty()
+    $(this).prev().remove();
+    $(`#task-info${id}`).empty();
     $(`#task-info${id}`).append(`
         <select name="category" id="category-select-edit">
             <option>Loading...</option>
@@ -89,6 +95,7 @@ function editTask() {
         $(this).text('Edit').attr('class', 'edit-btn')
         $(`[value|=${dataObj.category}]`).removeAttr('selected')
         getTasks();
+        oneEditAtATime();
     })
     $(document).on('click', '.changes-btn', submitEdit)
 
@@ -111,6 +118,7 @@ function submitEdit() {
         data: dataObj
     }).then(function (response) {
         getTasks();
+        oneEditAtATime();
         console.log(response)
     }).catch(function (err) {
         console.log(err)
@@ -121,11 +129,16 @@ function completeTask() {
     let id = $(this).closest('.task').data('id');
     let completed = !$(this).closest('.task').data('completed')
 
+    if ($(this).hasClass('complete-btn') === true) {
+        $(this).removeClass().addClass('retry-btn').text('Make Active');
+    } else if ($(this).hasClass('retry-btn') === true) {
+        $(this).removeClass().addClass('complete-btn').text('Completed');
+    }
+
     let dataObj = {
         completed: `${completed}`
 
     }
-
 
     $.ajax({
         url: `/tasks/${id}`,
@@ -133,7 +146,6 @@ function completeTask() {
         data: dataObj
     }).then(function (response) {
         getTasks();
-        console.log(response)
     }).catch(function (err) {
         console.log(err)
     })
@@ -157,10 +169,24 @@ function renderTasks(data) {
         console.log(item.completed)
         let dateAdded = new Date(item.date_added).toDateString();
         let completeBy = new Date(item.complete_by).toDateString();
+        let completeBtnClass;
+        let completeBtnTxt;
+        let completeDivClass;
+
+        if (item.completed) {
+            completeBtnTxt = 'Complete Task'
+            completeBtnClass = 'complete-btn'
+            completeDivClass = 'status-active'
+        } else if (!item.completed) {
+            completeBtnTxt = 'Make Active'
+            completeBtnClass = 'retry-btn'
+            completeDivClass = 'status-complete'
+        }
+
         $('#tasks-display').append(`
-            <div class="task" data-id="${item.id}" data-completed="${item.completed}">
+            <div class="task ${completeDivClass}" data-id="${item.id}" data-completed="${item.completed}">
                 <div class="task-info" id="task-info${item.id}" data-task="${item.task}" data-complete-by="${item.complete_by}">
-                    <h1 class="cat-icon" data-category="${item.category}">${item.category}</h1>
+                    <h1 class="cat-icon ${item.category}" data-category="${item.category}">${item.category}</h1>
                     <table>
                         <tr>
                             <td class="task-description">${item.task}</td> 
@@ -176,7 +202,7 @@ function renderTasks(data) {
                     </table>
                 </div>
                 <div class="task-btns">
-                    <button class="complete-btn">Completed</button>
+                    <button class="${completeBtnClass}">${completeBtnTxt}</button>
                     <button class="edit-btn">Edit</button>
                     <button class="delete-btn">Delete</button>
                 </div>
