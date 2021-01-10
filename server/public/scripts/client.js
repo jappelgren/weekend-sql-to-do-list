@@ -1,8 +1,12 @@
 $('document').ready(handleReady);
 
+
+//oneEditAtATime makes sure there is only one task edit active at a time.  Current edit must be
+//completed or canceled before another can be started
 function oneEditAtATime() {
     $(document).one('click', '.edit-btn', editTask);
-}
+}//end oneEditAtATime
+
 
 function handleReady() {
     getCategories('category-select');
@@ -16,6 +20,7 @@ function handleReady() {
     $(document).on('click', '#submit-cat-btn', newCategory);
 }//end handleReady
 
+//getTasks gets all tasks stored in the database.
 function getTasks() {
     $.ajax({
         url: '/tasks',
@@ -29,6 +34,9 @@ function getTasks() {
     })
 }//end gwtTasks
 
+
+//submitForm creates an object from the values in the task inputs and sends that info to the database,
+//empties those inputs and calls getTasks.
 function submitForm() {
     let taskObj = {
         task: $('#task').val(),
@@ -51,6 +59,9 @@ function submitForm() {
     })
 }//end submitForm
 
+
+//editTask changes the selected task to a series of inputs filled with their current values
+//it replaces the edit, completed and delete button with a cancel and submit button.  
 function editTask() {
 
     let id = $(this).closest('.task').data('id');
@@ -87,9 +98,9 @@ function editTask() {
         oneEditAtATime();
     })
     $(document).on('click', '.changes-btn', submitEdit)
+}//end editTask
 
-}
-
+//submitEdit takes the info from editTask and submits it to the database and refreshes task list
 function submitEdit() {
     let id = $(this).closest('.task').data('id');
 
@@ -112,8 +123,10 @@ function submitEdit() {
     }).catch(function (err) {
         console.log(err)
     })
-}
+}//end submitEdit
 
+//completeTask marks tasks as completed.  The complete button will change to a readd button
+//which changes the status back to active.
 function completeTask() {
     let id = $(this).closest('.task').data('id');
     let completed = !$(this).closest('.task').data('completed')
@@ -140,6 +153,7 @@ function completeTask() {
     })
 }
 
+//deleteTask deletes selected task from database.
 function deleteTask() {
     $.ajax({
         url: `/tasks/${$(this).closest('.task').data('id')}`,
@@ -151,7 +165,9 @@ function deleteTask() {
     })
 }//end deleteTask
 
-
+//renderTasks renders all tasks to the dom and does a few conditionals to decide certain values.
+//dates are formatted to be more readable.  A check is done to assign category icons.  A check is done
+//to see if a task is completed or not.
 function renderTasks(data) {
     $('#tasks-display').empty();
     for (item of data) {
@@ -233,6 +249,9 @@ function dateFormatter(date) {
 
 //begin category functions
 
+//getCategories renders the categories in two places, the category select in the submit area and
+//in the add category area where categories can be added and deleted. The params are to make sure when tasks
+//are edited the selected category matches its current category.
 function getCategories(selectId, editCat = null) {
     $.ajax({
         url: '/categories',
@@ -266,7 +285,7 @@ function getCategories(selectId, editCat = null) {
     })
 }//end getCategories
 
-
+//newCategory adds new custom categories to db
 function newCategory() {
     let taskObj = {
         category: $('#new-cat-in').val(),
@@ -286,7 +305,7 @@ function newCategory() {
 }//end newCategory
 
 
-
+//deleteCategory deletes a selected category from db.
 function deleteCategory() {
     $.ajax({
         url: `/categories/${$(this).closest('div').data('id')}`,
