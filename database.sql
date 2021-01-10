@@ -19,5 +19,3 @@ VALUES ('Walk dog', 'Home', '1-6-2021', '1-8-2021', false),
 
 INSERT INTO "category"(category)
 VALUES ('Home'), ('Work'), ('School'), ('Urgent');
-
-DROP TABLE "todo";
