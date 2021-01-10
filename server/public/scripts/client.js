@@ -26,6 +26,18 @@ function getCategories(selectId, editCat = null) {
             } else {
                 $(`#${selectId}`).append(`<option value="${cat.category}">${cat.category}</option>`)
             }
+            $('#cat-tag-container').append(`
+            <div class="cat-tag">
+            <p>${cat.category}</p>
+            <button class="delete-cat">
+              <img
+                class="delete-tag-img"
+                src="./images/iconmonstr-x-mark-4.svg"
+                alt="Black circle with an x in the middle"
+              />
+            </button>
+          </div>
+            `)
         }
 
     }).catch(function (err) {

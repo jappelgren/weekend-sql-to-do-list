@@ -11,4 +11,51 @@ router.get('/', (req, res) => {
         })
 })
 
+router.post('/', (req, res) => {
+
+    let queryText = `
+        INSERT INTO "category"(category)
+        VALUES ($1);
+        `
+    pool.query(queryText, [req.body.category])
+        .then((result) => {
+            res.sendStatus(201)
+        }).catch((err) => {
+            console.log(err)
+            res.sendStatus(500)
+        })
+})
+
+router.delete('/:id', (req, res) => {
+    let queryText = `
+        DELETE FROM "category"
+        WHERE "id" = $1;
+        `
+    pool.query(queryText, [req.params.id])
+        .then((result) => {
+            res.sendStatus(200)
+        }).catch((err) => {
+            console.log(err)
+            res.sendStatus(500)
+        })
+})
+
+router.put('/:id', (req, res) => {
+
+    let queryArr = [req.body.category, req.params.id]
+    let queryText = `
+    UPDATE "category"
+    SET "category" = $1
+    WHERE "id" = $2;
+    `
+
+    pool.query(queryText, queryArr)
+        .then((result) => {
+            res.sendStatus(200)
+        }).catch((err) => {
+            console.log(err)
+            res.sendStatus(500)
+        })
+})
+
 module.exports = router;
