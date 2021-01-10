@@ -208,12 +208,12 @@ function renderTasks(data) {
                             <td colspan="2" class="task-description">${item.task}</td> 
                         </tr>
                         <tr class="added-completed-row-row">
-                            <td>Added on:</td>
-                            <td>Complete by:</td>
+                            <td class="table-dates">Added on:</td>
+                            <td class="table-dates">Complete by:</td>
                         </tr>
                         <tr>
-                            <td class="date-added">${dateAdded}</td> 
-                            <td class="complete-by">${completeBy}</td>
+                            <td class="date-added table-dates">${dateAdded}</td> 
+                            <td class="complete-by table-dates">${completeBy}</td>
                         </tr>
                     </table>
                 </div>

@@ -11,11 +11,12 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles/style.css" />
-    <title>TO DO</title>
+    <title>TODO</title>
   </head>
   <body>
     <main>
       <section id="input">
+        <img id="logo" src="./images/logo.png" alt="todo logo" />
         <div id="input-container">
           <label for="task">Task</label>
           <input name="task" type="text" id="task" autocomplete="off" />
@@ -26,6 +27,22 @@
           <label for="complete-by">Complete by:</label>
           <input type="date" name="date" id="complete-by" />
           <button id="submit-btn">Submit</button>
+        </div>
+        <div id="category-container">
+          <label for="category-add">Add Category</label>
+          <input type="text" />
+          <div id="cat-tag-container">
+            <div class="cat-tag">
+              <p>Home</p>
+              <button class="delete-cat">
+                <img
+                  class="delete-tag-img"
+                  src="./images/iconmonstr-x-mark-4.svg"
+                  alt="Black circle with an x in the middle"
+                />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
       <section id="tasks-display"></section>
