@@ -136,7 +136,6 @@ function completeTask() {
 
     if ($(this).hasClass('complete-btn') === true) {
         $(this).removeClass().addClass('retry-btn');
-        $(this).empty()
     } else if ($(this).hasClass('retry-btn') === true) {
         $(this).removeClass().addClass('complete-btn');
     }
@@ -177,6 +176,7 @@ function renderTasks(data) {
         let completeBy = new Date(item.complete_by).toDateString();
         let completeBtnClass;
         let completeDivClass;
+        let completeBtnImage;
         let iconFile;
 
         if (item.category === 'Home') {
@@ -194,9 +194,11 @@ function renderTasks(data) {
         if (!item.completed) {
             completeBtnClass = 'complete-btn'
             completeDivClass = 'status-active'
+            completeBtnImage = 'iconmonstr-check-mark-4.svg'
         } else if (item.completed) {
             completeBtnClass = 'retry-btn'
             completeDivClass = 'status-complete'
+            completeBtnImage = 'iconmonstr-undo-5.svg'
         }
 
         $('#tasks-display').append(`
@@ -218,7 +220,7 @@ function renderTasks(data) {
                     </table>
                 </div>
                 <div class="task-btns">
-                    <button class="${completeBtnClass}"><img src="./images/iconmonstr-check-mark-4.svg" alt="black Checkmark" /></button>
+                    <button class="${completeBtnClass}"><img src="./images/${completeBtnImage}" alt="black Checkmark" /></button>
                     <button class="edit-btn"><img src="./images/iconmonstr-pencil-8.svg" alt="black Checkmark" /></button>
                     <button class="delete-btn"><img src="./images/iconmonstr-trash-can-9.svg" alt="black Checkmark" /></button>
                 </div>
