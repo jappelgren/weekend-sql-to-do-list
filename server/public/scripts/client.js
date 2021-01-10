@@ -171,13 +171,15 @@ function deleteTask() {
 function renderTasks(data) {
     $('#tasks-display').empty();
     for (item of data) {
-        console.log(item.completed)
+        console.log(item.date_added, item.complete_by)
+
         let dateAdded = new Date(item.date_added).toDateString();
         let completeBy = new Date(item.complete_by).toDateString();
         let completeBtnClass;
         let completeDivClass;
         let completeBtnImage;
         let iconFile;
+        let completeByPassed;
 
         if (item.category === 'Home') {
             iconFile = 'iconmonstr-building-7.svg'
@@ -201,6 +203,12 @@ function renderTasks(data) {
             completeBtnImage = 'iconmonstr-undo-5.svg'
         }
 
+        if (item.date_added > item.complete_by) {
+            completeByPassed = 'date-expired';
+        } else {
+            completeByPassed = ' ';
+        }
+
         $('#tasks-display').append(`
             <div class="task ${completeDivClass}" data-id="${item.id}" data-completed="${item.completed}">
                 <div class="task-info" id="task-info${item.id}" data-task="${item.task}" data-complete-by="${item.complete_by}">
@@ -215,7 +223,7 @@ function renderTasks(data) {
                         </tr>
                         <tr>
                             <td class="date-added table-dates">${dateAdded}</td> 
-                            <td class="complete-by table-dates">${completeBy}</td>
+                            <td class="complete-by table-dates ${completeDivClass}-td ${completeByPassed}">${completeBy}</td>
                         </tr>
                     </table>
                 </div>
@@ -230,7 +238,7 @@ function renderTasks(data) {
 }//end renderTasks
 
 //The following little chunk of code was found here https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
-// It formats the date in a way that can be stored as a value in a <input> with a type of date.
+//It formats the date in a way that can be stored as a value in a <input> with a type of date.
 //The function uses the Date constructor to build a date and then checks to see if the day and month have two digits
 //if the date is a single digit it concats a 0 in front to make it conform to the yyyy-mm-dd format.
 function dateFormatter(date) {

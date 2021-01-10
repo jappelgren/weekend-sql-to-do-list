@@ -244,3 +244,13 @@ button:active {
   overflow: auto;
   margin: 1rem;
 }
+
+.date-expired {
+  color: rgb(245, 96, 96);
+  text-shadow: 0px 2px 0px rgb(110, 107, 107);
+}
+
+.status-complete-td.date-expired {
+  color: rgb(63, 63, 63);
+  text-shadow: none;
+}
