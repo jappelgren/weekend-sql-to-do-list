@@ -94,7 +94,7 @@ section {
     rgba(69, 98, 192, 0.8),
     rgba(76, 110, 217, 0.2)
   );
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 15px 0 rgba(31, 38, 135, 0.5);
   backdrop-filter: blur(11px);
   -webkit-backdrop-filter: blur(11px);
   border-radius: 10px;
@@ -106,7 +106,7 @@ section {
     rgba(186, 31, 161, 0.8),
     rgba(186, 31, 161, 0.2)
   );
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  box-shadow: 0 8px 15px 0 rgba(31, 38, 135, 0.5);
   backdrop-filter: blur(11px);
   -webkit-backdrop-filter: blur(11px);
   border-radius: 10px;
@@ -170,6 +170,7 @@ select {
 
 label {
   margin-top: 0.25rem;
+  font-weight: 600;
 }
 
 td {

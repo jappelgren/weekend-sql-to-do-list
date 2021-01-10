@@ -12,39 +12,9 @@ function handleReady() {
     $(document).on('click', '.delete-btn', deleteTask);
     $(document).on('click', '.complete-btn', completeTask);
     $(document).on('click', '.retry-btn', completeTask);
+    $(document).on('click', '.delete-cat', deleteCategory);
+    $(document).on('click', '#submit-cat-btn', newCategory);
 }//end handleReady
-
-function getCategories(selectId, editCat = null) {
-    $.ajax({
-        url: '/categories',
-        type: 'GET'
-    }).then(function (response) {
-        $(`#${selectId}`).empty()
-        for (cat of response) {
-            if (editCat === cat.category) {
-                $(`#${selectId}`).append(`<option selected="selected" value="${cat.category}">${cat.category}</option>`)
-            } else {
-                $(`#${selectId}`).append(`<option value="${cat.category}">${cat.category}</option>`)
-            }
-            $('#cat-tag-container').append(`
-            <div class="cat-tag">
-            <p>${cat.category}</p>
-            <button class="delete-cat">
-              <img
-                class="delete-tag-img"
-                src="./images/iconmonstr-x-mark-4.svg"
-                alt="Black circle with an x in the middle"
-              />
-            </button>
-          </div>
-            `)
-        }
-
-    }).catch(function (err) {
-        console.log(err)
-        alert('Error getting data.')
-    })
-}//end getCategories
 
 function getTasks() {
     $.ajax({
@@ -73,6 +43,8 @@ function submitForm() {
         data: taskObj
     }).then(function (response) {
         console.log(response)
+        $('#task').val('')
+        $('#complete-by').val('')
         getTasks();
     }).catch(function (err) {
         console.log(err)
@@ -258,3 +230,70 @@ function dateFormatter(date) {
 
     return [year, month, day].join('-');
 }//end dateFormatter
+
+//begin category functions
+
+function getCategories(selectId, editCat = null) {
+    $.ajax({
+        url: '/categories',
+        type: 'GET'
+    }).then(function (response) {
+        $(`#${selectId}`).empty()
+        $('#cat-tag-container').empty()
+        for (cat of response) {
+            if (editCat === cat.category) {
+                $(`#${selectId}`).append(`<option selected="selected" value="${cat.category}">${cat.category}</option>`)
+            } else {
+                $(`#${selectId}`).append(`<option value="${cat.category}">${cat.category}</option>`)
+            }
+            $('#cat-tag-container').append(`
+            <div class="cat-tag" data-id="${cat.id}">
+            <p>${cat.category}</p>
+            <button class="delete-cat">
+              <img
+                class="delete-tag-img"
+                src="./images/iconmonstr-x-mark-4.svg"
+                alt="Black circle with an x in the middle"
+              />
+            </button>
+          </div>
+            `)
+        }
+
+    }).catch(function (err) {
+        console.log(err)
+        alert('Error getting data.')
+    })
+}//end getCategories
+
+
+function newCategory() {
+    let taskObj = {
+        category: $('#new-cat-in').val(),
+    }
+
+    $.ajax({
+        url: '/categories',
+        type: 'POST',
+        data: taskObj
+    }).then(function (response) {
+        console.log(response)
+        $('#new-cat-in').val('')
+        getCategories('category-select');
+    }).catch(function (err) {
+        console.log(err)
+    })
+}//end newCategory
+
+
+
+function deleteCategory() {
+    $.ajax({
+        url: `/categories/${$(this).closest('div').data('id')}`,
+        type: 'DELETE'
+    }).then(function (response) {
+        getCategories('category-select');
+    }).catch(function (err) {
+        console.log(err)
+    })
+}//end deleteTask

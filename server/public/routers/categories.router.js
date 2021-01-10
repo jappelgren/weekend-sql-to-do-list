@@ -40,22 +40,4 @@ router.delete('/:id', (req, res) => {
         })
 })
 
-router.put('/:id', (req, res) => {
-
-    let queryArr = [req.body.category, req.params.id]
-    let queryText = `
-    UPDATE "category"
-    SET "category" = $1
-    WHERE "id" = $2;
-    `
-
-    pool.query(queryText, queryArr)
-        .then((result) => {
-            res.sendStatus(200)
-        }).catch((err) => {
-            console.log(err)
-            res.sendStatus(500)
-        })
-})
-
 module.exports = router;
